@@ -408,43 +408,6 @@
         </nested-class>
     </class>
 
-    <class name="EmptyCacheClass">
-        <description>Класс с пустой аннотацией @Cache для демонстрации</description>
-        <annotation>@Cache</annotation>
-        <fields>
-            <field name="data" type="String" access="private">Тестовые данные</field>
-        </fields>
-        <constructors>
-            <constructor access="public">Конструктор по умолчанию</constructor>
-        </constructors>
-        <methods>
-            <method name="getData" return="String" access="public">Геттер для данных</method>
-        </methods>
-    </class>
-
-    <!-- Тестовые классы -->
-    <class name="TestClass_2_7">
-        <description>Класс для тестирования совместной работы аннотаций @Cache и @Invoke</description>
-        <annotation>@Cache({"users", "orders"})</annotation>
-        <methods>
-            <method name="annotatedMethod1" return="void" access="public">
-                <description>Метод с аннотацией @Invoke для тестирования</description>
-                <annotation>@Invoke</annotation>
-            </method>
-            <method name="annotatedMethod2" return="void" access="public">
-                <description>Второй метод с аннотацией @Invoke для тестирования</description>
-                <annotation>@Invoke</annotation>
-            </method>
-            <method name="privateAnnotatedMethod" return="void" access="private">
-                <description>Приватный метод с аннотацией @Invoke для тестирования</description>
-                <annotation>@Invoke</annotation>
-            </method>
-            <method name="regularMethod" return="void" access="public">
-                <description>Метод без аннотации для сравнения</description>
-            </method>
-        </methods>
-    </class>
-
     <!-- Главный класс -->
     <class name="Main">
         <description>Главный класс программы для демонстрации всех заданий по аннотациям</description>
@@ -531,67 +494,6 @@
                 <parameters>
                     <parameter name="scanner" type="Scanner">Сканер для ввода</parameter>
                 </parameters>
-            </method>
-        </methods>
-    </class>
-
-    <!-- Тестовые классы JUnit (если будут добавлены) -->
-    <class name="TestClass_2_1_JUnit">
-        <description>JUnit тесты для задания 2.1 (проверка аннотации @ToString)</description>
-        <methods>
-            <method name="testFieldsWithYesAnnotationAreIncluded" return="void" access="public">
-                <description>Тест проверяет, что поля с @ToString(YES) отображаются</description>
-                <annotation>@Test</annotation>
-            </method>
-            <method name="testFieldsWithNoAnnotationAreExcluded" return="void" access="public">
-                <description>Тест проверяет, что поля с @ToString(NO) не отображаются</description>
-                <annotation>@Test</annotation>
-            </method>
-            <method name="testToStringHandler" return="void" access="public">
-                <description>Тест проверяет обработчик ToStringHandler</description>
-                <annotation>@Test</annotation>
-            </method>
-            <method name="testClassWithoutToStringAnnotation" return="void" access="public">
-                <description>Тест для класса без аннотации @ToString</description>
-                <annotation>@Test</annotation>
-            </method>
-        </methods>
-    </class>
-
-    <class name="TestClass_2_7_JUnit">
-        <description>JUnit тесты для задания 2.7 (совместная работа @Cache и @Invoke)</description>
-        <methods>
-            <method name="testCacheAnnotation" return="void" access="public">
-                <description>Тест проверяет аннотацию @Cache</description>
-                <annotation>@Test</annotation>
-            </method>
-            <method name="testInvokeAnnotation" return="void" access="public">
-                <description>Тест проверяет аннотацию @Invoke</description>
-                <annotation>@Test</annotation>
-            </method>
-            <method name="testEmptyCacheAnnotation" return="void" access="public">
-                <description>Тест для класса с пустым @Cache</description>
-                <annotation>@Test</annotation>
-            </method>
-            <method name="testCombinedAnnotations" return="void" access="public">
-                <description>Тест проверяет совместную работу аннотаций</description>
-                <annotation>@Test</annotation>
-            </method>
-            <method name="testCacheSimulation" return="void" access="public">
-                <description>Тест для имитации работы кэша</description>
-                <annotation>@Test</annotation>
-            </method>
-        </methods>
-    </class>
-
-    <!-- Вспомогательные классы -->
-    <class name="EmptyCacheTestClass">
-        <description>Вспомогательный класс для тестирования пустого кэша</description>
-        <annotation>@Cache</annotation>
-        <methods>
-            <method name="testMethod" return="void" access="public">
-                <description>Тестовый метод с аннотацией @Invoke</description>
-                <annotation>@Invoke</annotation>
             </method>
         </methods>
     </class>
