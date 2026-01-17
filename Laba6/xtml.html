@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documentation>
+    <!-- Аннотации -->
+    <annotation name="Invoke">
+        <description>Аннотация для автоматического вызова методов через Reflection API</description>
+        <retention>RUNTIME</retention>
+        <target>METHOD</target>
+        <characteristics>
+            <characteristic>Целью может быть только МЕТОД</characteristic>
+            <characteristic>Доступна во время исполнения программы</characteristic>
+            <characteristic>Не имеет свойств</characteristic>
+        </characteristics>
+    </annotation>
+
+    <annotation name="Default">
+        <description>Аннотация для указания типа по умолчанию для класса или поля</description>
+        <retention>RUNTIME</retention>
+        <target>TYPE, FIELD</target>
+        <parameters>
+            <parameter name="value" type="Class">Класс по умолчанию</parameter>
+        </parameters>
+        <characteristics>
+            <characteristic>Целью может быть ТИП или ПОЛЕ</characteristic>
+            <characteristic>Доступна во время исполнения программы</characteristic>
+            <characteristic>Имеет обязательное свойство value типа Class</characteristic>
+        </characteristics>
+    </annotation>
+
+    <annotation name="ToString">
+        <description>Аннотация для управления отображением полей в строковом представлении объекта</description>
+        <retention>RUNTIME</retention>
+        <target>TYPE, FIELD</target>
+        <parameters>
+            <parameter name="value" type="Mode" default="YES">Определяет, показывать ли поле/класс</parameter>
+        </parameters>
+        <enum name="Mode">
+            <value>YES - показывать поле</value>
+            <value>NO - скрывать поле</value>
+        </enum>
+        <characteristics>
+            <characteristic>Целью может быть ТИП или ПОЛЕ</characteristic>
+            <characteristic>Доступна во время исполнения программы</characteristic>
+            <characteristic>Имеет необязательное свойство value с двумя вариантами значений: YES или NO</characteristic>
+            <characteristic>Значение свойства по умолчанию: YES</characteristic>
+        </characteristics>
+    </annotation>
+
+    <annotation name="Validate">
+        <description>Аннотация для указания списка классов для проверки</description>
+        <retention>RUNTIME</retention>
+        <target>TYPE, ANNOTATION_TYPE</target>
+        <parameters>
+            <parameter name="value" type="Class[]">Массив классов для проверки</parameter>
+        </parameters>
+        <characteristics>
+            <characteristic>Целью может быть ТИП или АННОТАЦИЯ</characteristic>
+            <characteristic>Доступна во время исполнения программы</characteristic>
+            <characteristic>Имеет обязательное свойство value типа Class[]</characteristic>
+        </characteristics>
+    </annotation>
+
+    <annotation name="Two">
+        <description>Аннотация с двумя обязательными свойствами: строковым и числовым</description>
+        <retention>RUNTIME</retention>
+        <target>TYPE</target>
+        <parameters>
+            <parameter name="first" type="String">Текстовые данные</parameter>
+            <parameter name="second" type="int">Числовые данные</parameter>
+        </parameters>
+        <characteristics>
+            <characteristic>Целью может быть ТИП</characteristic>
+            <characteristic>Доступна во время исполнения программы</characteristic>
+            <characteristic>Имеет два обязательных свойства: first типа String и second типа int</characteristic>
+        </characteristics>
+    </annotation>
+
+    <annotation name="Cache">
+        <description>Аннотация для конфигурации кэшируемых областей</description>
+        <retention>RUNTIME</retention>
+        <target>TYPE</target>
+        <parameters>
+            <parameter name="value" type="String[]" default="{}">Список имен кэшируемых областей</parameter>
+        </parameters>
+        <characteristics>
+            <characteristic>Целью может быть ТИП</characteristic>
+            <characteristic>Доступна во время исполнения программы</characteristic>
+            <characteristic>Имеет необязательное свойство value типа String[]</characteristic>
+            <characteristic>Значение свойства по умолчанию: пустой массив</characteristic>
+        </characteristics>
+    </annotation>
+
+    <!-- Основные классы заданий -->
+    <class name="Class_1_1">
+        <description>Класс для демонстрации работы аннотации @Invoke</description>
+        <fields>
+            <field name="executionCount" type="int" access="private">Счетчик вызовов методов</field>
+        </fields>
+        <methods>
+            <method name="annotatedMethod1" return="void" access="public">
+                <description>Метод, автоматически вызываемый через аннотацию @Invoke</description>
+                <annotation>@Invoke</annotation>
+            </method>
+            <method name="annotatedMethod2" return="void" access="public">
+                <description>Еще один метод с аннотацией @Invoke</description>
+                <annotation>@Invoke</annotation>
+            </method>
+            <method name="privateAnnotatedMethod" return="void" access="private">
+                <description>Приватный метод с аннотацией @Invoke</description>
+                <annotation>@Invoke</annotation>
+            </method>
+            <method name="annotatedMethodWithParam" return="void" access="public">
+                <description>Метод с параметрами и аннотацией @Invoke</description>
+                <parameters>
+                    <parameter name="message" type="String">Сообщение для вывода</parameter>
+                </parameters>
+                <annotation>@Invoke</annotation>
+            </method>
+            <method name="regularMethod" return="void" access="public">
+                <description>Обычный метод без аннотации</description>
+            </method>
+        </methods>
+        <nested-class name="InvokeHandler" access="public static">
+            <description>Обработчик для выполнения методов с аннотацией @Invoke</description>
+            <methods>
+                <method name="invokeAnnotatedMethods" return="void" access="public static">
+                    <description>Автоматически вызывает все методы с аннотацией @Invoke</description>
+                    <parameters>
+                        <parameter name="obj" type="Object">Объект, методы которого нужно выполнить</parameter>
+                    </parameters>
+                </method>
+            </methods>
+        </nested-class>
+    </class>
+
+    <class name="Class_1_2">
+        <description>Класс для демонстрации аннотации @Default</description>
+        <annotation>@Default(String.class)</annotation>
+        <fields>
+            <field name="id" type="int" access="private">
+                <description>ID товара с аннотацией @Default</description>
+                <annotation>@Default(Integer.class)</annotation>
+            </field>
+            <field name="price" type="double" access="private">
+                <description>Цена товара с аннотацией @Default</description>
+                <annotation>@Default(Double.class)</annotation>
+            </field>
+            <field name="name" type="String" access="private">
+                <description>Название товара с аннотацией @Default</description>
+                <annotation>@Default(String.class)</annotation>
+            </field>
+            <field name="description" type="String" access="private">
+                <description>Описание товара без аннотации</description>
+            </field>
+        </fields>
+        <constructors>
+            <constructor access="public">Конструктор по умолчанию</constructor>
+            <constructor access="public" parameters="int, double, String, String">
+                <description>Конструктор с параметрами</description>
+                <parameters>
+                    <parameter name="id" type="int">ID товара</parameter>
+                    <parameter name="price" type="double">Цена товара</parameter>
+                    <parameter name="name" type="String">Название товара</parameter>
+                    <parameter name="description" type="String">Описание товара</parameter>
+                </parameters>
+            </constructor>
+        </constructors>
+        <methods>
+            <method name="getId" return="int" access="public">Геттер для ID</method>
+            <method name="getPrice" return="double" access="public">Геттер для цены</method>
+            <method name="getName" return="String" access="public">Геттер для названия</method>
+            <method name="getDescription" return="String" access="public">Геттер для описания</method>
+        </methods>
+        <nested-class name="DefaultHandler" access="public static">
+            <description>Обработчик для работы с аннотацией @Default</description>
+            <methods>
+                <method name="printDefaultTypes" return="void" access="public static">
+                    <description>Выводит информацию о типах по умолчанию из аннотаций</description>
+                    <parameters>
+                        <parameter name="obj" type="Object">Объект для анализа</parameter>
+                    </parameters>
+                </method>
+                <method name="createWithDefaults" return="Object" access="public static">
+                    <description>Создает объект с значениями по умолчанию на основе аннотаций</description>
+                    <parameters>
+                        <parameter name="clazz" type="Class">Класс для создания</parameter>
+                    </parameters>
+                    <returns>Объект с значениями по умолчанию</returns>
+                    <throws>Exception при ошибке создания</throws>
+                </method>
+            </methods>
+        </nested-class>
+    </class>
+
+    <class name="Class_1_3">
+        <description>Класс Person для демонстрации аннотации @ToString</description>
+        <annotation>@ToString(Mode.YES)</annotation>
+        <fields>
+            <field name="firstName" type="String" access="private">
+                <description>Имя пользователя</description>
+                <annotation>@ToString(Mode.YES)</annotation>
+            </field>
+            <field name="lastName" type="String" access="private">
+                <description>Фамилия пользователя</description>
+                <annotation>@ToString(Mode.YES)</annotation>
+            </field>
+            <field name="password" type="String" access="private">
+                <description>Пароль (скрыт в строковом представлении)</description>
+                <annotation>@ToString(Mode.NO)</annotation>
+            </field>
+            <field name="age" type="int" access="private">
+                <description>Возраст</description>
+                <annotation>@ToString(Mode.YES)</annotation>
+            </field>
+            <field name="email" type="String" access="private">
+                <description>Email (без аннотации - по умолчанию YES)</description>
+            </field>
+            <field name="salary" type="double" access="private">
+                <description>Зарплата (скрыта в строковом представлении)</description>
+                <annotation>@ToString(Mode.NO)</annotation>
+            </field>
+        </fields>
+        <constructors>
+            <constructor access="public" parameters="String, String, String, int, String, double">
+                <description>Параметризованный конструктор</description>
+                <parameters>
+                    <parameter name="firstName" type="String">Имя</parameter>
+                    <parameter name="lastName" type="String">Фамилия</parameter>
+                    <parameter name="password" type="String">Пароль</parameter>
+                    <parameter name="age" type="int">Возраст</parameter>
+                    <parameter name="email" type="String">Email</parameter>
+                    <parameter name="salary" type="double">Зарплата</parameter>
+                </parameters>
+            </constructor>
+        </constructors>
+        <methods>
+            <method name="toStringWithAnnotations" return="String" access="public">
+                <description>Формирует строковое представление с учетом аннотаций @ToString</description>
+                <returns>Строковое представление объекта</returns>
+            </method>
+            <method name="toString" return="String" access="public">
+                <description>Стандартный метод toString()</description>
+                <annotation>@Override</annotation>
+                <returns>Строковое представление объекта</returns>
+            </method>
+        </methods>
+        <nested-class name="ToStringHandler" access="public static">
+            <description>Обработчик для формирования строкового представления с учетом аннотаций</description>
+            <methods>
+                <method name="generateToString" return="String" access="public static">
+                    <description>Генерирует строковое представление объекта с учетом аннотаций</description>
+                    <parameters>
+                        <parameter name="obj" type="Object">Объект для преобразования</parameter>
+                    </parameters>
+                    <returns>Строковое представление</returns>
+                </method>
+            </methods>
+        </nested-class>
+    </class>
+
+    <class name="Class_1_4">
+        <description>Класс для демонстрации аннотации @Validate</description>
+        <annotation>@Validate({String.class, Integer.class, Double.class, Boolean.class})</annotation>
+        <fields>
+            <field name="name" type="String" access="private">Название элемента</field>
+            <field name="count" type="int" access="private">Количество</field>
+            <field name="price" type="double" access="private">Цена</field>
+            <field name="active" type="boolean" access="private">Флаг активности</field>
+        </fields>
+        <constructors>
+            <constructor access="public" parameters="String, int, double, boolean">
+                <description>Параметризованный конструктор</description>
+                <parameters>
+                    <parameter name="name" type="String">Название</parameter>
+                    <parameter name="count" type="int">Количество</parameter>
+                    <parameter name="price" type="double">Цена</parameter>
+                    <parameter name="active" type="boolean">Активен</parameter>
+                </parameters>
+            </constructor>
+        </constructors>
+        <methods>
+            <method name="getName" return="String" access="public">Геттер для названия</method>
+            <method name="getCount" return="int" access="public">Геттер для количества</method>
+            <method name="getPrice" return="double" access="public">Геттер для цены</method>
+            <method name="isActive" return="boolean" access="public">Геттер для флага активности</method>
+        </methods>
+        <nested-class name="ValidateHandler" access="public static">
+            <description>Обработчик для аннотации @Validate</description>
+            <methods>
+                <method name="printValidationClasses" return="void" access="public static">
+                    <description>Выводит список классов, указанных в аннотации @Validate</description>
+                    <parameters>
+                        <parameter name="clazz" type="Class">Класс для анализа</parameter>
+                    </parameters>
+                </method>
+            </methods>
+        </nested-class>
+    </class>
+
+    <class name="Class_1_5">
+        <description>Класс для демонстрации аннотации @Two</description>
+        <annotation>@Two(first = "Пример строкового значения", second = 42)</annotation>
+        <fields>
+            <field name="data" type="String" access="private">Строковые данные</field>
+            <field name="value" type="int" access="private">Числовое значение</field>
+        </fields>
+        <constructors>
+            <constructor access="public">Конструктор по умолчанию</constructor>
+            <constructor access="public" parameters="String, int">
+                <description>Конструктор с параметрами</description>
+                <parameters>
+                    <parameter name="data" type="String">Строковые данные</parameter>
+                    <parameter name="value" type="int">Числовое значение</parameter>
+                </parameters>
+            </constructor>
+        </constructors>
+        <methods>
+            <method name="getData" return="String" access="public">Геттер для данных</method>
+            <method name="getValue" return="int" access="public">Геттер для значения</method>
+            <method name="setData" return="void" access="public">
+                <description>Сеттер для данных</description>
+                <parameters>
+                    <parameter name="data" type="String">Новые данные</parameter>
+                </parameters>
+            </method>
+            <method name="setValue" return="void" access="public">
+                <description>Сеттер для значения</description>
+                <parameters>
+                    <parameter name="value" type="int">Новое значение</parameter>
+                </parameters>
+            </method>
+            <method name="loadFromAnnotation" return="void" access="public">
+                <description>Загружает значения из аннотации @Two</description>
+            </method>
+        </methods>
+        <nested-class name="TwoHandler" access="public static">
+            <description>Обработчик для аннотации @Two</description>
+            <methods>
+                <method name="printAnnotationValues" return="void" access="public static">
+                    <description>Читает и выводит значения свойств аннотации @Two</description>
+                    <parameters>
+                        <parameter name="clazz" type="Class">Класс для анализа</parameter>
+                    </parameters>
+                </method>
+                <method name="createFromAnnotation" return="Object" access="public static">
+                    <description>Создает объект и инициализирует его значениями из аннотации</description>
+                    <parameters>
+                        <parameter name="clazz" type="Class">Класс для создания</parameter>
+                    </parameters>
+                    <returns>Созданный объект</returns>
+                    <throws>Exception при ошибке создания</throws>
+                </method>
+            </methods>
+        </nested-class>
+    </class>
+
+    <class name="Class_1_6">
+        <description>Класс для демонстрации аннотации @Cache</description>
+        <annotation>@Cache({"users", "orders", "products", "settings"})</annotation>
+        <fields>
+            <field name="cache" type="Map&lt;String, Map&lt;String, Object&gt;&gt;" access="private">
+                <description>Структура данных для хранения кэша</description>
+            </field>
+        </fields>
+        <constructors>
+            <constructor access="public">
+                <description>Конструктор, инициализирующий кэш</description>
+            </constructor>
+        </constructors>
+        <methods>
+            <method name="put" return="void" access="public">
+                <description>Добавляет данные в кэш</description>
+                <parameters>
+                    <parameter name="region" type="String">Область кэша</parameter>
+                    <parameter name="key" type="String">Ключ</parameter>
+                    <parameter name="value" type="Object">Значение</parameter>
+                </parameters>
+            </method>
+            <method name="get" return="Object" access="public">
+                <description>Получает данные из кэша</description>
+                <parameters>
+                    <parameter name="region" type="String">Область кэша</parameter>
+                    <parameter name="key" type="String">Ключ</parameter>
+                </parameters>
+                <returns>Значение или null</returns>
+            </method>
+            <method name="getCacheRegions" return="List&lt;String&gt;" access="public">
+                <description>Получает список всех кэшируемых областей</description>
+                <returns>Список областей</returns>
+            </method>
+        </methods>
+        <nested-class name="CacheHandler" access="public static">
+            <description>Обработчик для аннотации @Cache</description>
+            <methods>
+                <method name="printCacheRegions" return="void" access="public static">
+                    <description>Выводит список кэшируемых областей</description>
+                    <parameters>
+                        <parameter name="clazz" type="Class">Класс для анализа</parameter>
+                    </parameters>
+                </method>
+                <method name="isCachingEnabled" return="boolean" access="public static">
+                    <description>Проверяет, активировано ли кэширование для класса</description>
+                    <parameters>
+                        <parameter name="clazz" type="Class">Класс для проверки</parameter>
+                    </parameters>
+                    <returns>true если кэширование активировано</returns>
+                </method>
+            </methods>
+        </nested-class>
+    </class>
+
+    <class name="EmptyCacheClass">
+        <description>Класс с пустой аннотацией @Cache для демонстрации</description>
+        <annotation>@Cache</annotation>
+        <fields>
+            <field name="data" type="String" access="private">Тестовые данные</field>
+        </fields>
+        <constructors>
+            <constructor access="public">Конструктор по умолчанию</constructor>
+        </constructors>
+        <methods>
+            <method name="getData" return="String" access="public">Геттер для данных</method>
+        </methods>
+    </class>
+
+    <!-- Тестовые классы -->
+    <class name="TestClass_2_7">
+        <description>Класс для тестирования совместной работы аннотаций @Cache и @Invoke</description>
+        <annotation>@Cache({"users", "orders"})</annotation>
+        <methods>
+            <method name="annotatedMethod1" return="void" access="public">
+                <description>Метод с аннотацией @Invoke для тестирования</description>
+                <annotation>@Invoke</annotation>
+            </method>
+            <method name="annotatedMethod2" return="void" access="public">
+                <description>Второй метод с аннотацией @Invoke для тестирования</description>
+                <annotation>@Invoke</annotation>
+            </method>
+            <method name="privateAnnotatedMethod" return="void" access="private">
+                <description>Приватный метод с аннотацией @Invoke для тестирования</description>
+                <annotation>@Invoke</annotation>
+            </method>
+            <method name="regularMethod" return="void" access="public">
+                <description>Метод без аннотации для сравнения</description>
+            </method>
+        </methods>
+    </class>
+
+    <!-- Главный класс -->
+    <class name="Main">
+        <description>Главный класс программы для демонстрации всех заданий по аннотациям</description>
+        <fields>
+            <field name="scanner" type="Scanner" access="private static">Сканер для чтения ввода с клавиатуры</field>
+        </fields>
+        <methods>
+            <method name="main" return="void" access="public static">
+                <description>Главный метод программы. Последовательно выполняет демонстрацию всех заданий</description>
+                <parameters>
+                    <parameter name="args" type="String[]">Аргументы командной строки</parameter>
+                </parameters>
+            </method>
+            <method name="Class_1_1" return="void" access="public static">
+                <description>Демонстрация Class_1_1 (Задание 1.1 - Аннотация @Invoke)</description>
+                <parameters>
+                    <parameter name="scanner" type="Scanner">Сканер для ввода данных</parameter>
+                </parameters>
+            </method>
+            <method name="Class_1_2" return="void" access="public static">
+                <description>Демонстрация Class_1_2 (Задание 1.2 - Аннотация @Default)</description>
+                <parameters>
+                    <parameter name="scanner" type="Scanner">Сканер для ввода данных</parameter>
+                </parameters>
+            </method>
+            <method name="Class_1_3" return="void" access="public static">
+                <description>Демонстрация Class_1_3 (Задание 1.3 - Аннотация @ToString)</description>
+                <parameters>
+                    <parameter name="scanner" type="Scanner">Сканер для ввода данных</parameter>
+                </parameters>
+            </method>
+            <method name="Class_1_4" return="void" access="public static">
+                <description>Демонстрация Class_1_4 (Задание 1.4 - Аннотация @Validate)</description>
+                <parameters>
+                    <parameter name="scanner" type="Scanner">Сканер для ввода данных</parameter>
+                </parameters>
+            </method>
+            <method name="Class_1_5" return="void" access="public static">
+                <description>Демонстрация Class_1_5 (Задание 1.5 - Аннотация @Two)</description>
+                <parameters>
+                    <parameter name="scanner" type="Scanner">Сканер для ввода данных</parameter>
+                </parameters>
+            </method>
+            <method name="Class_1_6" return="void" access="public static">
+                <description>Демонстрация Class_1_6 (Задание 1.6 - Аннотация @Cache)</description>
+                <parameters>
+                    <parameter name="scanner" type="Scanner">Сканер для ввода данных</parameter>
+                </parameters>
+            </method>
+            <method name="Class_2_1" return="void" access="public static">
+                <description>Демонстрация Class_2_1 (Задание 2.1 - Тест JUnit для @ToString)</description>
+                <parameters>
+                    <parameter name="scanner" type="Scanner">Сканер для ввода данных</parameter>
+                </parameters>
+            </method>
+            <method name="Class_2_7" return="void" access="public static">
+                <description>Демонстрация Class_2_7 (Задание 2.7 - Тест JUnit для @Cache и @Invoke)</description>
+                <parameters>
+                    <parameter name="scanner" type="Scanner">Сканер для ввода данных</parameter>
+                </parameters>
+            </method>
+            <method name="getIntInput" return="int" access="private static">
+                <description>Получает целочисленный ввод от пользователя с проверкой</description>
+                <parameters>
+                    <parameter name="scanner" type="Scanner">Сканер для ввода</parameter>
+                    <parameter name="prompt" type="String">Приглашение для ввода</parameter>
+                    <parameter name="min" type="int">Минимальное значение</parameter>
+                    <parameter name="max" type="int">Максимальное значение</parameter>
+                </parameters>
+                <returns>Введенное целое число</returns>
+            </method>
+            <method name="getDoubleInput" return="double" access="private static">
+                <description>Получает дробное число от пользователя с проверкой</description>
+                <parameters>
+                    <parameter name="scanner" type="Scanner">Сканер для ввода</parameter>
+                    <parameter name="prompt" type="String">Приглашение для ввода</parameter>
+                    <parameter name="min" type="double">Минимальное значение</parameter>
+                    <parameter name="max" type="double">Максимальное значение</parameter>
+                </parameters>
+                <returns>Введенное дробное число</returns>
+            </method>
+            <method name="pressEnterToContinue" return="void" access="private static">
+                <description>Ожидает нажатия клавиши Enter для продолжения</description>
+                <parameters>
+                    <parameter name="scanner" type="Scanner">Сканер для ввода</parameter>
+                </parameters>
+            </method>
+        </methods>
+    </class>
+
+    <!-- Тестовые классы JUnit (если будут добавлены) -->
+    <class name="TestClass_2_1_JUnit">
+        <description>JUnit тесты для задания 2.1 (проверка аннотации @ToString)</description>
+        <methods>
+            <method name="testFieldsWithYesAnnotationAreIncluded" return="void" access="public">
+                <description>Тест проверяет, что поля с @ToString(YES) отображаются</description>
+                <annotation>@Test</annotation>
+            </method>
+            <method name="testFieldsWithNoAnnotationAreExcluded" return="void" access="public">
+                <description>Тест проверяет, что поля с @ToString(NO) не отображаются</description>
+                <annotation>@Test</annotation>
+            </method>
+            <method name="testToStringHandler" return="void" access="public">
+                <description>Тест проверяет обработчик ToStringHandler</description>
+                <annotation>@Test</annotation>
+            </method>
+            <method name="testClassWithoutToStringAnnotation" return="void" access="public">
+                <description>Тест для класса без аннотации @ToString</description>
+                <annotation>@Test</annotation>
+            </method>
+        </methods>
+    </class>
+
+    <class name="TestClass_2_7_JUnit">
+        <description>JUnit тесты для задания 2.7 (совместная работа @Cache и @Invoke)</description>
+        <methods>
+            <method name="testCacheAnnotation" return="void" access="public">
+                <description>Тест проверяет аннотацию @Cache</description>
+                <annotation>@Test</annotation>
+            </method>
+            <method name="testInvokeAnnotation" return="void" access="public">
+                <description>Тест проверяет аннотацию @Invoke</description>
+                <annotation>@Test</annotation>
+            </method>
+            <method name="testEmptyCacheAnnotation" return="void" access="public">
+                <description>Тест для класса с пустым @Cache</description>
+                <annotation>@Test</annotation>
+            </method>
+            <method name="testCombinedAnnotations" return="void" access="public">
+                <description>Тест проверяет совместную работу аннотаций</description>
+                <annotation>@Test</annotation>
+            </method>
+            <method name="testCacheSimulation" return="void" access="public">
+                <description>Тест для имитации работы кэша</description>
+                <annotation>@Test</annotation>
+            </method>
+        </methods>
+    </class>
+
+    <!-- Вспомогательные классы -->
+    <class name="EmptyCacheTestClass">
+        <description>Вспомогательный класс для тестирования пустого кэша</description>
+        <annotation>@Cache</annotation>
+        <methods>
+            <method name="testMethod" return="void" access="public">
+                <description>Тестовый метод с аннотацией @Invoke</description>
+                <annotation>@Invoke</annotation>
+            </method>
+        </methods>
+    </class>
+</documentation>
